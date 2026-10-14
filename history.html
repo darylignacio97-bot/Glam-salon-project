@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History / Reports - GLAM SALON</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #fff7fa;
+            color: #54394b;
+            font-family: Arial, sans-serif;
+        }
+
+        .nav {
+            background: #fff;
+            padding: 17px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            border-bottom: 1px solid #f1dce6;
+        }
+
+        .brand {
+            color: #bd477b;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .brand small {
+            display: block;
+            color: #987d8c;
+            font-size: 11px;
+            font-weight: normal;
+            margin-top: 5px;
+        }
+
+        .navlinks {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .navlinks a {
+            text-decoration: none;
+            color: #75586a;
+            padding: 10px 12px;
+            border-radius: 9px;
+            font-size: 13px;
+        }
+
+        .navlinks a:hover,
+        .navlinks a.active {
+            background: #f8dce8;
+            color: #b63d76;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 22px 40px;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            color: #842050;
+            font-family: Georgia, serif;
+            font-size: 34px;
+        }
+
+        .subtitle {
+            color: #927a89;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .date-label {
+            background: #fff;
+            border: 1px solid #eed9e4;
+            padding: 12px 15px;
+            border-radius: 10px;
+            color: #765568;
+            font-size: 13px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 15px;
+            margin-bottom: 23px;
+        }
+
+        .summary-card {
+            padding: 22px;
+            border: 1px solid #f1dce6;
+            border-radius: 15px;
+            background: #fff;
+            min-width: 0;
+        }
+
+        .summary-card:nth-child(1) { background: #fff0f5; }
+        .summary-card:nth-child(2) { background: #f6f0ff; }
+        .summary-card:nth-child(3) { background: #effbf5; }
+        .summary-card:nth-child(4) { background: #fff5eb; }
+
+        .summary-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #fff;
+            color: #c94b80;
+            font-size: 21px;
+            margin-bottom: 15px;
+        }
+
+        .summary-card h3 {
+            margin: 0 0 10px;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .summary-number {
+            font-size: 29px;
+            font-weight: bold;
+            color: #263849;
+            overflow-wrap: anywhere;
+        }
+
+        .summary-note {
+            color: #7e6a7a;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid #f0dfe7;
+            border-radius: 15px;
+            padding: 22px;
+            min-width: 0;
+            box-shadow: 0 5px 16px rgba(150, 75, 110, 0.04);
+        }
+
+        .panel h2 {
+            margin: 0 0 7px;
+            font-size: 19px;
+            color: #493349;
+        }
+
+        .panel-subtitle {
+            color: #947d8c;
+            font-size: 13px;
+            margin: 0 0 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 270px;
+            width: 100%;
+        }
+
+        .table-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .table-heading h2 {
+            margin: 0 0 6px;
+            font-size: 20px;
+        }
+
+        .search-input {
+            padding: 11px 13px;
+            border: 1px solid #ead5e0;
+            border-radius: 9px;
+            outline: none;
+            max-width: 100%;
+        }
+
+        .search-input:focus {
+            border-color: #d66b9b;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid #f0e2e9;
+            border-radius: 11px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th {
+            padding: 15px 13px;
+            text-align: left;
+            background: #fbeaf1;
+            color: #80546b;
+            font-size: 12px;
+        }
+
+        td {
+            padding: 15px 13px;
+            border-bottom: 1px solid #f3e8ee;
+            font-size: 13px;
+        }
+
+        tbody tr:hover { background: #fff9fc; }
+        tbody tr:last-child td { border-bottom: none; }
+
+        .status {
+            display: inline-block;
+            border-radius: 20px;
+            padding: 6px 10px;
+            font-size: 11px;
+            background: #f8e9f1;
+            color: #a23d71;
+        }
+
+        .status.completed {
+            background: #e6f7ef;
+            color: #218357;
+        }
+
+        .status.cancelled {
+            background: #ffe9e9;
+            color: #c34444;
+        }
+
+        .status.booked,
+        .status.scheduled {
+            background: #f0e9ff;
+            color: #7952b8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #9a8290;
+        }
+
+        .print-btn {
+            border: none;
+            border-radius: 9px;
+            padding: 11px 15px;
+            background: #ca4c81;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .print-btn:hover { background: #b63c70; }
+
+        @media (max-width: 1000px) {
+            .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .reports-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 0 13px 25px; }
+            h1 { font-size: 28px; }
+            .summary-grid { grid-template-columns: 1fr 1fr; gap: 9px; }
+            .summary-card { padding: 14px; }
+            .summary-number { font-size: 23px; }
+            .panel { padding: 14px; }
+            .chart-container { height: 230px; }
+        }
+
+        @media print {
+            .nav, .search-input, .print-btn { display: none !important; }
+            body { background: white; }
+            .container { max-width: none; margin: 0; padding: 0; }
+            .panel, .summary-card { box-shadow: none; break-inside: avoid; }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="nav">
+    <div class="brand">
+        GLAM SALON
+        <small>Salon Appointment &amp; Management System</small>
+    </div>
+
+    <div class="navlinks">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('appointments') }}">Appointments</a>
+        <a href="{{ url_for('staff_page') }}">Staff</a>
+        <a href="{{ url_for('services_page') }}">Services</a>
+        <a href="{{ url_for('history') }}" class="active">Reports</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+
+<main class="container">
+
+    {% set ns = namespace(revenue=0, completed=0, clients=[], service_counts={}) %}
+
+    {% for x in appointments %}
+        {% if x.status|string|lower == 'completed' %}
+            {% set ns.completed = ns.completed + 1 %}
+            {% set ns.revenue = ns.revenue + (x.price|float) %}
+        {% endif %}
+
+        {% if x.customer not in ns.clients %}
+            {% set ns.clients = ns.clients + [x.customer] %}
+        {% endif %}
+
+        {% set ns.service_counts = dict(ns.service_counts, **{x.service: ns.service_counts.get(x.service, 0) + 1}) %}
+    {% endfor %}
+
+    <div class="page-heading">
+        <div>
+            <h1>History / Reports</h1>
+            <p class="subtitle">View your salon's appointment history and performance.</p>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <span class="date-label">📅 All Appointment Records</span>
+            <button class="print-btn" onclick="window.print()">Print Report</button>
+        </div>
+    </div>
+
+    <section class="summary-grid">
+        <div class="summary-card">
+            <div class="summary-icon">▦</div>
+            <h3>Total Appointments</h3>
+            <div class="summary-number">{{ appointments|length }}</div>
+            <div class="summary-note">All recorded appointments</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">♙</div>
+            <h3>Total Clients</h3>
+            <div class="summary-number">{{ ns.clients|length }}</div>
+            <div class="summary-note">Unique customer names</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">✿</div>
+            <h3>Completed Services</h3>
+            <div class="summary-number">{{ ns.completed }}</div>
+            <div class="summary-note">Appointments marked completed</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">₱</div>
+            <h3>Completed Revenue</h3>
+            <div class="summary-number" style="font-size:25px;">
+                ₱{{ "{:,.2f}".format(ns.revenue) }}
+            </div>
+            <div class="summary-note">Based on completed appointments</div>
+        </div>
+    </section>
+
+    <section class="reports-grid">
+        <div class="panel">
+            <h2>Appointments Trend</h2>
+            <p class="panel-subtitle">Number of appointments by date</p>
+            <div class="chart-container">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Services Popularity</h2>
+            <p class="panel-subtitle">Most frequently booked services</p>
+            <div class="chart-container">
+                <canvas id="serviceChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="table-heading">
+            <div>
+                <h2>Appointment History</h2>
+                <p class="panel-subtitle" style="margin:6px 0 0;">
+                    All saved appointment records
+                </p>
+            </div>
+
+            <input
+                id="reportSearch"
+                class="search-input"
+                type="search"
+                placeholder="Search customer, service, staff..."
+                aria-label="Search appointment history">
+        </div>
+
+        <div class="table-wrap">
+            <table id="reportTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Service</th>
+                        <th>Staff</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for x in appointments %}
+                    <tr>
+                        <td>{{ x.id }}</td>
+                        <td>{{ x.customer }}</td>
+                        <td>{{ x.date }}</td>
+                        <td>{{ x.time }}</td>
+                        <td>{{ x.service }}</td>
+                        <td>{{ x.staff }}</td>
+                        <td>₱{{ "{:,.2f}".format(x.price|float) }}</td>
+                        <td>
+                            <span class="status {{ x.status|string|lower }}">
+                                {{ x.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="empty-state">
+                            No appointment records found yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+<script>
+    const reportRows = [
+        {% for x in appointments %}
+        {
+            date: {{ x.date|string|tojson }},
+            service: {{ x.service|string|tojson }}
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const dateCounts = {};
+    const serviceCounts = {};
+
+    reportRows.forEach(item => {
+        dateCounts[item.date] = (dateCounts[item.date] || 0) + 1;
+        serviceCounts[item.service] = (serviceCounts[item.service] || 0) + 1;
+    });
+
+    const dateLabels = Object.keys(dateCounts).sort();
+    const serviceLabels = Object.keys(serviceCounts);
+
+    if (typeof Chart !== "undefined") {
+        new Chart(document.getElementById("trendChart"), {
+            type: "line",
+            data: {
+                labels: dateLabels,
+                datasets: [{
+                    label: "Appointments",
+                    data: dateLabels.map(date => dateCounts[date]),
+                    borderColor: "#df4d83",
+                    backgroundColor: "rgba(223,77,131,0.12)",
+                    fill: true,
+                    tension: 0.35
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+            }
+        });
+
+        new Chart(document.getElementById("serviceChart"), {
+            type: "doughnut",
+            data: {
+                labels: serviceLabels,
+                datasets: [{
+                    data: serviceLabels.map(name => serviceCounts[name]),
+                    backgroundColor: [
+                        "#e95b8b", "#b48ae5", "#7dcdb0",
+                        "#ffbd78", "#82b2f6", "#ef91b5"
+                    ],
+                    borderWidth: 2,
+                    borderColor: "#ffffff"
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: "bottom" } }
+            }
+        });
+    }
+
+    document.getElementById("reportSearch").addEventListener("input", function () {
+        const query = this.value.toLowerCase().trim();
+
+        document.querySelectorAll("#reportTable tbody tr").forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(query)
+                ? ""
+                : "none";
+        });
+    });
+</script>
+
+</body>
+</html>
