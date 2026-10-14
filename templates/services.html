@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services & Promos | GLAM SALON</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #fff7fa;
+            color: #603d50;
+            font-family: Arial, sans-serif;
+        }
+
+        .nav {
+            background: #fff;
+            padding: 18px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 1px solid #f3dce7;
+        }
+
+        .brand strong {
+            display: block;
+            color: #bd477b;
+            font-size: 22px;
+            letter-spacing: 1px;
+        }
+
+        .brand span {
+            display: block;
+            color: #987e8d;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .navlinks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .navlinks a {
+            text-decoration: none;
+            color: #745669;
+            font-size: 13px;
+            padding: 10px 12px;
+            border-radius: 9px;
+        }
+
+        .navlinks a:hover,
+        .navlinks a.active {
+            background: #f8dce8;
+            color: #b63d76;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 32px auto;
+            padding: 0 24px 40px;
+        }
+
+        .page-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            color: #83184f;
+            font-family: Georgia, serif;
+            font-size: 36px;
+        }
+
+        .subtitle {
+            color: #90778a;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .section {
+            background: #fff;
+            border: 1px solid #f4dce7;
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 18px rgba(150, 75, 110, 0.05);
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .section-heading h2 {
+            color: #8c2058;
+            font-size: 22px;
+            margin: 0 0 6px;
+        }
+
+        .section-heading p {
+            color: #9c8493;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            border: none;
+            background: #ce4d83;
+            color: white;
+            padding: 11px 17px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #b83b70;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .service-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+            padding: 14px;
+            border: 1px solid #f4d9e5;
+            border-radius: 13px;
+            background: #fffafd;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .service-card:hover,
+        .promo-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 18px rgba(180, 70, 120, 0.10);
+        }
+
+        .service-image {
+            width: 90px;
+            height: 95px;
+            flex-shrink: 0;
+            object-fit: cover;
+            border-radius: 10px;
+            background: #fbe5ee;
+        }
+
+        .service-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .service-info h3,
+        .promo-info h3 {
+            margin: 0 0 7px;
+            color: #71344f;
+            font-size: 15px;
+        }
+
+        .description {
+            color: #927b8a;
+            font-size: 12px;
+            line-height: 1.5;
+            margin: 0 0 13px;
+        }
+
+        .price {
+            color: #ce3f77;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 7px;
+            margin-top: 12px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 0;
+            background: #fbe0eb;
+            color: #b53d76;
+            font-size: 13px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .promo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .promo-card {
+            overflow: hidden;
+            border: 1px solid #f4d9e5;
+            border-radius: 13px;
+            background: #fffafd;
+            padding: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .promo-image-wrap {
+            position: relative;
+        }
+
+        .promo-image {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            display: block;
+            border-radius: 9px;
+            background: #fbe5ee;
+        }
+
+        .promo-label {
+            position: absolute;
+            top: 9px;
+            right: 8px;
+            padding: 6px 9px;
+            border-radius: 7px;
+            background: #c83f7b;
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .promo-info {
+            padding: 13px 4px 5px;
+        }
+
+        .promo-info .price {
+            margin: 12px 0;
+        }
+
+        .promo-details {
+            color: #927b8a;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            color: #9b8291;
+            text-align: center;
+            padding: 25px;
+            border: 1px dashed #edcddd;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 1000px) {
+            .service-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .promo-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 13px 25px;
+                margin-top: 24px;
+            }
+
+            h1 {
+                font-size: 29px;
+            }
+
+            .section {
+                padding: 14px;
+            }
+
+            .service-grid,
+            .promo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .service-image {
+                width: 82px;
+                height: 88px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="nav">
+    <div class="brand">
+        <strong>GLAM SALON</strong>
+        <span>Salon Appointment &amp; Management System</span>
+    </div>
+
+    <div class="navlinks">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('appointments') }}">Appointments</a>
+        <a href="{{ url_for('staff_page') }}">Staff</a>
+        <a href="{{ url_for('services_page') }}" class="active">Services</a>
+        <a href="{{ url_for('history') }}">Reports</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+
+<main class="container">
+
+    <div class="page-heading">
+        <div>
+            <h1>Services &amp; Promos</h1>
+            <p class="subtitle">
+                Explore our salon services and special offers.
+            </p>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="section-heading">
+            <div>
+                <h2>✂ Services</h2>
+                <p>Our beauty services for your best self.</p>
+            </div>
+
+            <button class="btn" type="button"
+                    onclick="alert('Add Service will be connected to Flask next.')">
+                + Add Service
+            </button>
+        </div>
+
+        {% set image_map = {
+            'Hair Cut': 'Haircut.png',
+            'Hair Color': 'haircolor.png',
+            'Rebond': 'RebondHair.png',
+            'Manicure': 'Manicure.png',
+            'Spa': 'Spa.png'
+        } %}
+
+        <div class="service-grid">
+            {% for s in services %}
+            <article class="service-card">
+                <img
+                    class="service-image"
+                    src="{{ url_for('static', filename='images/' + image_map.get(s.name, 'banner.jpg')) }}"
+                    alt="{{ s.name }}"
+                >
+
+                <div class="service-info">
+                    <h3>{{ s.name }}</h3>
+                    <p class="description">{{ s.description }}</p>
+                    <div class="price">
+                        ₱{{ "{:,.2f}".format(s.price|float) }}
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="action-btn" type="button"
+                                aria-label="Edit service"
+                                title="Edit service"
+                                onclick="alert('Edit Service will be connected to Flask next.')">
+                            ✎
+                        </button>
+                        <button class="action-btn" type="button"
+                                aria-label="Delete service"
+                                title="Delete service"
+                                onclick="alert('Delete Service will be connected to Flask next.')">
+                            ♲
+                        </button>
+                    </div>
+                </div>
+            </article>
+            {% else %}
+            <div class="empty-state">
+                No services available yet.
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-heading">
+            <div>
+                <h2>🏷 Promos</h2>
+                <p>Special deals for a more beautiful you.</p>
+            </div>
+
+            <button class="btn" type="button"
+                    onclick="alert('Add Promo will be connected to Flask next.')">
+                + Add Promo
+            </button>
+        </div>
+
+        {% set promo_map = {
+            'Rebond': 'rebond promo.jpg',
+            'Manicure': 'manicurepromo.jpg',
+            'Spa': 'Spa Special Promo.png'
+        } %}
+
+        <div class="promo-grid">
+            {% for p in promos %}
+            <article class="promo-card">
+                <div class="promo-image-wrap">
+                    <img
+                        class="promo-image"
+                        src="{{ url_for('static', filename='images/' + promo_map.get(p[0], 'banner.jpg')) }}"
+                        alt="{{ p[0] }} Promo"
+                    >
+                    <span class="promo-label">SPECIAL OFFER</span>
+                </div>
+
+                <div class="promo-info">
+                    <h3>{{ p[0] }}</h3>
+                    <p class="promo-details">{{ p[2] }}</p>
+                
+<div class="price">
+    {{ p[1] if p[1] is string else "₱{:,.2f}".format(p[1]|float) }}
+</div>
+
+                    <div class="card-actions">
+                        <button class="action-btn" type="button"
+                                aria-label="Edit promo"
+                                title="Edit promo"
+                                onclick="alert('Edit Promo will be connected to Flask next.')">
+                            ✎
+                        </button>
+                        <button class="action-btn" type="button"
+                                aria-label="Delete promo"
+                                title="Delete promo"
+                                onclick="alert('Delete Promo will be connected to Flask next.')">
+                            ♲
+                        </button>
+                    </div>
+                </div>
+            </article>
+            {% else %}
+            <div class="empty-state">
+                No promos available yet.
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>

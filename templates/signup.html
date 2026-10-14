@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLAM SALON | Sign Up</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 30px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffe6ef, #f5bfd4, #fff4f8);
+        }
+
+        .signup-card {
+            width: 100%;
+            max-width: 480px;
+            padding: 36px;
+            background: #fff;
+            border: 1px solid #f5d3e0;
+            border-radius: 24px;
+            box-shadow: 0 12px 35px #a51f551c;
+        }
+
+        .logo {
+            text-align: center;
+            margin: 0;
+            color: #a51f55;
+            font-family: Georgia, serif;
+            font-size: 38px;
+            letter-spacing: 6px;
+        }
+
+        .salon {
+            text-align: center;
+            color: #b03060;
+            font-size: 12px;
+            letter-spacing: 7px;
+            margin: 5px 0 25px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #b03060;
+            font-family: Georgia, serif;
+            font-size: 29px;
+            font-style: italic;
+            font-weight: normal;
+            margin: 0 0 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #766879;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 27px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #403447;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .hint {
+            color: #887889;
+            font-size: 12px;
+            font-weight: normal;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e9bfd0;
+            border-radius: 11px;
+            background: #fffafd;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #b03060;
+            box-shadow: 0 0 0 3px #b0306015;
+        }
+
+        .flash {
+            padding: 12px;
+            margin-bottom: 17px;
+            background: #fff0f3;
+            color: #a51f45;
+            border-radius: 9px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .create-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 7px;
+            border: none;
+            border-radius: 11px;
+            background: linear-gradient(100deg, #a51f55, #d34f83);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .create-btn:hover {
+            background: #901b49;
+            transform: translateY(-1px);
+        }
+
+        .login-link {
+            margin-top: 24px;
+            text-align: center;
+            color: #766879;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #b03060;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .signup-card {
+                padding: 27px 22px;
+            }
+
+            .logo {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signup-card">
+
+        <h1 class="logo">GLAM</h1>
+        <p class="salon">S A L O N</p>
+
+        <h2>Create Your Account</h2>
+        <p class="subtitle">
+            Your beauty journey begins here!<br>
+            Create an account to book your salon appointments.
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('signup') }}">
+
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name"
+                       placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email"
+                       placeholder="Enter your email address" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    Password <span class="hint">(minimum 8 characters)</span>
+                </label>
+                <input type="password" id="password" name="password"
+                       placeholder="Create a password"
+                       minlength="8" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password"
+                       name="confirm_password"
+                       placeholder="Re-enter your password"
+                       minlength="8" required>
+            </div>
+
+            <button type="submit" class="create-btn">
+                CREATE ACCOUNT &nbsp; →
+            </button>
+
+        </form>
+
+        <p class="login-link">
+            Already have an account?<br><br>
+            <a href="{{ url_for('login') }}">Login here</a>
+        </p>
+
+    </div>
+</body>
+</html>
