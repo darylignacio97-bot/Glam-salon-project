@@ -1,4 +1,4 @@
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#fff7fa;color:#3d2731}
+﻿*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#fff7fa;color:#3d2731}
 .nav{background:#d88aaa;color:#fff;padding:15px 28px;display:flex;justify-content:space-between;align-items:center;gap:15px}
 .brand{font-size:25px;font-weight:800}.brand small{font-size:11px;font-weight:400}.navlinks{display:flex;gap:6px;flex-wrap:wrap}.navlinks a{padding:9px 11px;border-radius:8px}.navlinks a:hover{background:#b84f82}
 .container{max-width:1200px;margin:auto;padding:28px 20px}.hero{background:linear-gradient(135deg,#f8dce8,#fff);padding:35px;border-radius:20px}
@@ -152,7 +152,6 @@ select:focus {
         scroll-behavior: auto !important;
     }
 }
-<<<<<<< HEAD
 
 /* ===== Glam Salon Animations ===== */
 
@@ -272,5 +271,4 @@ textarea:focus {
         transition-duration: 0.01ms !important;
     }
 }
-=======
->>>>>>> origin/main
+

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -437,15 +437,15 @@ table tr:hover td {
         <div class="nav-label">MAIN MENU</div>
 
         <nav class="nav-links">
-            <a class="active" href="{{ url_for('dashboard') }}">▦ &nbsp; Dashboard</a>
-            <a href="{{ url_for('appointments') }}">▣ &nbsp; Appointments</a>
-            <a href="{{ url_for('staff_page') }}">♙ &nbsp; Staff</a>
-            <a href="{{ url_for('services_page') }}">✂ &nbsp; Services</a>
-            <a href="{{ url_for('history') }}">▤ &nbsp; Reports</a>
+            <a class="active" href="{{ url_for('dashboard') }}">â–¦ &nbsp; Dashboard</a>
+            <a href="{{ url_for('appointments') }}">â–£ &nbsp; Appointments</a>
+            <a href="{{ url_for('staff_page') }}">â™™ &nbsp; Staff</a>
+            <a href="{{ url_for('services_page') }}">âœ‚ &nbsp; Services</a>
+            <a href="{{ url_for('history') }}">â–¤ &nbsp; Reports</a>
         </nav>
 
         <div class="sidebar-footer">
-            <a href="{{ url_for('logout') }}">↪ &nbsp; Logout</a>
+            <a href="{{ url_for('logout') }}">â†ª &nbsp; Logout</a>
         </div>
     </aside>
 
@@ -455,16 +455,12 @@ table tr:hover td {
             <div>
                 <h1 class="page-title">Dashboard</h1>
                 <p class="page-subtitle">
-<<<<<<< HEAD
-                    Welcome To My Glam Salon.
-=======
-                    Welcome back! Here's what's happening at your salon.
->>>>>>> origin/main
+Welcome To My Glam Salon.
                 </p>
             </div>
 
             <div class="admin-badge">
-                <div class="admin-avatar">💗</div>
+                <div class="admin-avatar">ðŸ’—</div>
                 <div>
                     <strong>Salon Admin</strong>
                     <small>Administrator</small>
@@ -490,7 +486,7 @@ table tr:hover td {
             <div class="card">
                 <div class="card-top">
                     <span class="card-label">TOTAL APPOINTMENTS</span>
-                    <span class="card-icon">📅</span>
+                    <span class="card-icon">ðŸ“…</span>
                 </div>
                 <div class="stat">{{ counts.appointments }}</div>
                 <div class="card-note">Appointments recorded</div>
@@ -499,7 +495,7 @@ table tr:hover td {
             <div class="card">
                 <div class="card-top">
                     <span class="card-label">TOTAL STAFF</span>
-                    <span class="card-icon">👩‍💼</span>
+                    <span class="card-icon">ðŸ‘©â€ðŸ’¼</span>
                 </div>
                 <div class="stat">{{ counts.staff }}</div>
                 <div class="card-note">Salon team members</div>
@@ -508,7 +504,7 @@ table tr:hover td {
             <div class="card">
                 <div class="card-top">
                     <span class="card-label">TOTAL SERVICES</span>
-                    <span class="card-icon">✂️</span>
+                    <span class="card-icon">âœ‚ï¸</span>
                 </div>
                 <div class="stat">{{ counts.services }}</div>
                 <div class="card-note">Available salon services</div>
@@ -526,35 +522,23 @@ table tr:hover td {
             <div class="service-grid">
                 {% for s in services %}
                     {% set image_map = {
-<<<<<<< HEAD
-                        'Hair Cut': 'Haircut.jpg',
+'Hair Cut': 'Haircut.jpg',
                         'Hair Color': 'haircolor.jpg',
                         'Rebond': 'RebondHair.jpg',
                         'Manicure': 'Manicure.jpg',
                         'Spa': 'Spa.jpg'
-=======
-                        'Hair Cut': 'Haircut.png',
-                        'Hair Color': 'haircolor.png',
-                        'Rebond': 'RebondHair.png',
-                        'Manicure': 'Manicure.png',
-                        'Spa': 'Spa.png'
->>>>>>> origin/main
                     } %}
 
                     <article class="service">
                         <img
                             class="service-image"
-<<<<<<< HEAD
-                            src="{{ url_for('static', filename='images/' + image_map.get(s.name, 'salon_banner.jpg')) }}"
-=======
-                            src="{{ url_for('static', filename='images/' + image_map.get(s.name, 'salon_banner.svg')) }}"
->>>>>>> origin/main
+src="{{ url_for('static', filename='images/' + image_map.get(s.name, 'salon_banner.jpg')) }}"
                             alt="{{ s.name }}"
                         >
                         <h3>{{ s.name }}</h3>
                         <p>{{ s.description }}</p>
                         <div class="price">
-                            ₱{{ "{:,.0f}".format(s.price) }}
+                            â‚±{{ "{:,.0f}".format(s.price) }}
                         </div>
                     </article>
                 {% else %}
@@ -576,21 +560,13 @@ table tr:hover td {
                     {% set promo_map = {
                         'Rebond': 'rebond promo.jpg',
                         'Manicure': 'manicurepromo.jpg',
-<<<<<<< HEAD
-                        'Spa': 'Spa Special Promo.jpg'
-=======
-                        'Spa': 'Spa Special Promo.png'
->>>>>>> origin/main
+'Spa': 'Spa Special Promo.jpg'
                     } %}
 
                     <article class="promo">
                         <img
                             class="promo-image"
-<<<<<<< HEAD
-                            src="{{ url_for('static', filename='images/' + promo_map.get(p[0], 'salon_banner.jpg')) }}"
-=======
-                            src="{{ url_for('static', filename='images/' + promo_map.get(p[0], 'salon_banner.svg')) }}"
->>>>>>> origin/main
+src="{{ url_for('static', filename='images/' + promo_map.get(p[0], 'salon_banner.jpg')) }}"
                             alt="{{ p[0] }} Promo"
                         >
                         <h3>{{ p[0] }}</h3>
@@ -645,10 +621,11 @@ table tr:hover td {
         </section>
 
         <footer class="footer">
-            © GLAM SALON · Salon Appointment &amp; Management System
+            Â© GLAM SALON Â· Salon Appointment &amp; Management System
         </footer>
 
     </main>
 </div>
 </body>
 </html>
+

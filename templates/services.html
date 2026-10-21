@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -349,7 +349,7 @@
     <section class="section">
         <div class="section-heading">
             <div>
-                <h2>✂ Services</h2>
+                <h2> Services</h2>
                 <p>Our beauty services for your best self.</p>
             </div>
 
@@ -360,19 +360,11 @@
         </div>
 
         {% set image_map = {
-<<<<<<< HEAD
             'Hair Cut': 'Haircut.jpg',
             'Hair Color': 'haircolor.jpg',
             'Rebond': 'RebondHair.jpg',
             'Manicure': 'Manicure.jpg',
             'Spa': 'Spa.jpg'
-=======
-            'Hair Cut': 'Haircut.png',
-            'Hair Color': 'haircolor.png',
-            'Rebond': 'RebondHair.png',
-            'Manicure': 'Manicure.png',
-            'Spa': 'Spa.png'
->>>>>>> origin/main
         } %}
 
         <div class="service-grid">
@@ -388,7 +380,7 @@
                     <h3>{{ s.name }}</h3>
                     <p class="description">{{ s.description }}</p>
                     <div class="price">
-                        ₱{{ "{:,.2f}".format(s.price|float) }}
+                        â‚±{{ "{:,.2f}".format(s.price|float) }}
                     </div>
 
                     <div class="card-actions">
@@ -396,13 +388,13 @@
                                 aria-label="Edit service"
                                 title="Edit service"
                                 onclick="alert('Edit Service will be connected to Flask next.')">
-                            ✎
+                            âœŽ
                         </button>
                         <button class="action-btn" type="button"
                                 aria-label="Delete service"
                                 title="Delete service"
                                 onclick="alert('Delete Service will be connected to Flask next.')">
-                            ♲
+                            â™²
                         </button>
                     </div>
                 </div>
@@ -418,7 +410,7 @@
     <section class="section">
         <div class="section-heading">
             <div>
-                <h2>🏷 Promos</h2>
+                <h2>ðŸ· Promos</h2>
                 <p>Special deals for a more beautiful you.</p>
             </div>
 
@@ -431,11 +423,7 @@
         {% set promo_map = {
             'Rebond': 'rebond promo.jpg',
             'Manicure': 'manicurepromo.jpg',
-<<<<<<< HEAD
             'Spa': 'Spa Special Promo.jpg'
-=======
-            'Spa': 'Spa Special Promo.png'
->>>>>>> origin/main
         } %}
 
         <div class="promo-grid">
@@ -455,7 +443,7 @@
                     <p class="promo-details">{{ p[2] }}</p>
                 
 <div class="price">
-    {{ p[1] if p[1] is string else "₱{:,.2f}".format(p[1]|float) }}
+    {{ p[1] if p[1] is string else "â‚±{:,.2f}".format(p[1]|float) }}
 </div>
 
                     <div class="card-actions">
@@ -463,13 +451,13 @@
                                 aria-label="Edit promo"
                                 title="Edit promo"
                                 onclick="alert('Edit Promo will be connected to Flask next.')">
-                            ✎
+                            âœŽ
                         </button>
                         <button class="action-btn" type="button"
                                 aria-label="Delete promo"
                                 title="Delete promo"
                                 onclick="alert('Delete Promo will be connected to Flask next.')">
-                            ♲
+                            â™²
                         </button>
                     </div>
                 </div>
