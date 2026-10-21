@@ -436,16 +436,18 @@ table tr:hover td {
 
         <div class="nav-label">MAIN MENU</div>
 
-        <nav class="nav-links">
-            <a class="active" href="{{ url_for('dashboard') }}">â–¦ &nbsp; Dashboard</a>
-            <a href="{{ url_for('appointments') }}">â–£ &nbsp; Appointments</a>
-            <a href="{{ url_for('staff_page') }}">â™™ &nbsp; Staff</a>
-            <a href="{{ url_for('services_page') }}">âœ‚ &nbsp; Services</a>
-            <a href="{{ url_for('history') }}">â–¤ &nbsp; Reports</a>
-        </nav>
+<nav class="nav-links">
+    <a class="active" href="{{ url_for('dashboard') }}">&#127968; &nbsp; Dashboard</a>
+    <a href="{{ url_for('appointments') }}">&#128197; &nbsp; Appointments</a>
+    <a href="{{ url_for('staff_page') }}">&#128100; &nbsp; Staff</a>
+    <a href="{{ url_for('services_page') }}">&#9986; &nbsp; Services</a>
+    <a href="{{ url_for('history') }}">&#128202; &nbsp; Reports</a>
+</nav>
+
+
 
         <div class="sidebar-footer">
-            <a href="{{ url_for('logout') }}">â†ª &nbsp; Logout</a>
+            <a href="{{ url_for('logout') }}"> &nbsp; Logout</a>
         </div>
     </aside>
 
@@ -455,12 +457,12 @@ table tr:hover td {
             <div>
                 <h1 class="page-title">Dashboard</h1>
                 <p class="page-subtitle">
-Welcome To My Glam Salon.
+                  Welcome To My Glam Salon.
                 </p>
             </div>
 
             <div class="admin-badge">
-                <div class="admin-avatar">ðŸ’—</div>
+                <div class="admin-avatar">💗</div>
                 <div>
                     <strong>Salon Admin</strong>
                     <small>Administrator</small>
@@ -486,7 +488,7 @@ Welcome To My Glam Salon.
             <div class="card">
                 <div class="card-top">
                     <span class="card-label">TOTAL APPOINTMENTS</span>
-                    <span class="card-icon">ðŸ“…</span>
+                    <span class="card-icon">📅</span>
                 </div>
                 <div class="stat">{{ counts.appointments }}</div>
                 <div class="card-note">Appointments recorded</div>
@@ -495,7 +497,7 @@ Welcome To My Glam Salon.
             <div class="card">
                 <div class="card-top">
                     <span class="card-label">TOTAL STAFF</span>
-                    <span class="card-icon">ðŸ‘©â€ðŸ’¼</span>
+                    <span class="card-icon">👩‍💼</span>
                 </div>
                 <div class="stat">{{ counts.staff }}</div>
                 <div class="card-note">Salon team members</div>
@@ -504,7 +506,7 @@ Welcome To My Glam Salon.
             <div class="card">
                 <div class="card-top">
                     <span class="card-label">TOTAL SERVICES</span>
-                    <span class="card-icon">âœ‚ï¸</span>
+                <span class="card-icon">✂️</span>
                 </div>
                 <div class="stat">{{ counts.services }}</div>
                 <div class="card-note">Available salon services</div>
@@ -538,7 +540,7 @@ src="{{ url_for('static', filename='images/' + image_map.get(s.name, 'salon_bann
                         <h3>{{ s.name }}</h3>
                         <p>{{ s.description }}</p>
                         <div class="price">
-                            â‚±{{ "{:,.0f}".format(s.price) }}
+                        ₱{{ "{:,.0f}".format(s.price) }}
                         </div>
                     </article>
                 {% else %}
@@ -621,7 +623,7 @@ src="{{ url_for('static', filename='images/' + promo_map.get(p[0], 'salon_banner
         </section>
 
         <footer class="footer">
-            Â© GLAM SALON Â· Salon Appointment &amp; Management System
+            © GLAM SALON · Salon Appointment &amp; Management System
         </footer>
 
     </main>
