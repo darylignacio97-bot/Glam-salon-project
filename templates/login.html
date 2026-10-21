@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLAM SALON </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffe3ed, #f6c0d5, #fff1f6);
+        }
+
+        .signup-card {
+            width: 100%;
+            max-width: 480px;
+            padding: 35px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 12px 35px rgba(176, 48, 96, 0.18);
+        }
+
+        .logo {
+            text-align: center;
+            color: #b03060;
+            font-family: Georgia, serif;
+            font-size: 38px;
+            letter-spacing: 6px;
+            margin: 0;
+        }
+
+        .salon {
+            text-align: center;
+            color: #b03060;
+            letter-spacing: 7px;
+            font-size: 12px;
+            margin: 5px 0 28px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #b03060;
+            font-family: Georgia, serif;
+            font-style: italic;
+            font-weight: normal;
+            font-size: 29px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #786a7b;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            color: #403447;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 19px;
+            border: 1px solid #e8b7cb;
+            border-radius: 11px;
+            background: #fffafd;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: 2px solid #f2c5d8;
+            border-color: #b03060;
+        }
+
+        .hint {
+            font-size: 12px;
+            font-weight: normal;
+            color: #806f80;
+        }
+
+        .flash {
+            padding: 12px;
+            background: #fff0f3;
+            border-radius: 8px;
+            color: #a51f45;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 11px;
+            background: linear-gradient(100deg, #b52b61, #cf4b80);
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #941e4c;
+        }
+
+        .login-link {
+            text-align: center;
+            color: #786a7b;
+            font-size: 14px;
+            margin-top: 24px;
+        }
+
+        a {
+            color: #b03060;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .signup-card {
+                padding: 27px 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signup-card">
+
+        <h1 class="logo">GLAM</h1>
+        <p class="salon">S A L O N</p>
+
+        <p class="subtitle">
+            Join GLAM SALON and enjoy a beautiful<br>
+            appointment experience!
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+
+
+<form method="POST" action="{{ url_for('login') }}">
+
+    <label for="email">Admin Email</label>
+    <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Enter admin email"
+        required
+    >
+
+    <label for="password">Password</label>
+    <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Enter password"
+        required
+    >
+
+    <button type="submit">ADMIN LOGIN</button>
+
+</form>
+<p class="signup-link">
+    Don't have an account?
+    <a href="{{ url_for('signup') }}">Create Account / Sign Up Here</a>
+</p>
+
+        <p class="login-link">
+            Already have an account?<br><br>
+            <a href="{{ url_for('login') }}">Login here</a>
+        </p>
+
+    </div>
+</body>
+</html>

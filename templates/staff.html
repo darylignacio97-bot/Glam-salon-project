@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Management | Glam Salon</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #fff7fa;
+            color: #593b49;
+            font-family: Arial, sans-serif;
+        }
+
+        .nav {
+            background: #fff;
+            padding: 18px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 1px solid #f4dce7;
+        }
+
+        .brand {
+            color: #c34f83;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .brand small {
+            display: block;
+            color: #987b89;
+            font-size: 11px;
+            margin-top: 5px;
+            font-weight: normal;
+        }
+
+        .navlinks {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .navlinks a {
+            text-decoration: none;
+            color: #755767;
+            padding: 10px 12px;
+            border-radius: 9px;
+            font-size: 13px;
+        }
+
+        .navlinks a:hover,
+        .navlinks a.active {
+            background: #fbe2ed;
+            color: #b83d77;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 35px auto;
+            padding: 0 22px;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            color: #58394a;
+            font-size: 30px;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: #9b8290;
+            font-size: 14px;
+        }
+
+        .staff-count {
+            background: #f8d9e7;
+            color: #a83f70;
+            border-radius: 14px;
+            padding: 15px 22px;
+            font-weight: bold;
+        }
+
+        .staff-count span {
+            font-size: 25px;
+            margin-right: 8px;
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid #f2dfe8;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 18px rgba(151, 81, 115, 0.05);
+        }
+
+        .panel h2 {
+            font-size: 19px;
+            margin: 0 0 8px;
+        }
+
+        .panel-description {
+            color: #a08a96;
+            font-size: 13px;
+            margin: 0 0 20px;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 360px;
+            padding: 12px 14px;
+            border: 1px solid #ead4df;
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        .search-box:focus {
+            border-color: #d77ba5;
+            box-shadow: 0 0 0 3px #fceaf2;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid #f2e4eb;
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 550px;
+        }
+
+        th {
+            background: #fbeaf1;
+            color: #86556e;
+            padding: 15px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 16px 15px;
+            border-bottom: 1px solid #f5e9ef;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #fff9fc;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .staff-name {
+            font-weight: bold;
+            color: #624256;
+        }
+
+        .position {
+            display: inline-block;
+            background: #fce8f1;
+            color: #b24e7e;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #a18a97;
+            padding: 30px;
+        }
+
+        @media (max-width: 700px) {
+            .nav {
+                align-items: flex-start;
+            }
+
+            .container {
+                margin-top: 25px;
+                padding: 0 14px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .panel {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="nav">
+        <div class="brand">
+            GLAM SALON
+            <small>Salon Appointment &amp; Management System</small>
+        </div>
+
+        <div class="navlinks">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('appointments') }}">Appointments</a>
+            <a href="{{ url_for('staff_page') }}" class="active">Staff</a>
+            <a href="{{ url_for('services_page') }}">Services</a>
+            <a href="{{ url_for('history') }}">Reports</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="page-heading">
+            <div>
+                <h1>Staff Management</h1>
+                <p class="subtitle">
+                    Manage your salon team and view staff information.
+                </p>
+            </div>
+
+            <div class="staff-count">
+                <span>{{ staff|length }}</span>
+                Total Staff
+            </div>
+        </div>
+
+        <section class="panel">
+            <h2>Staff Directory</h2>
+            <p class="panel-description">
+                View and search your registered salon staff.
+            </p>
+
+            <input
+                type="search"
+                id="staffSearch"
+                class="search-box"
+                placeholder="Search by name, position, or contact..."
+                aria-label="Search staff">
+
+            <div class="table-wrap">
+                <table id="staffTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Staff Name</th>
+                            <th>Position</th>
+                            <th>Contact</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for s in staff %}
+                        <tr>
+                            <td>{{ s.id }}</td>
+                            <td class="staff-name">{{ s.name }}</td>
+                            <td>
+                                <span class="position">
+                                    {{ s.position }}
+                                </span>
+                            </td>
+                            <td>{{ s.contact }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="empty-state">
+                                No staff members found yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const searchInput = document.getElementById("staffSearch");
+        const staffRows = document.querySelectorAll("#staffTable tbody tr");
+
+        searchInput.addEventListener("input", function () {
+            const query = this.value.toLowerCase().trim();
+
+            staffRows.forEach(function (row) {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(query) ? "" : "none";
+            });
+        });
+    </script>
+</body>
+</html>
