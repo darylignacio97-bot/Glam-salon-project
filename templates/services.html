@@ -1,24 +1,49 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Services & Promos | GLAM SALON</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 
     <style>
         * {
             box-sizing: border-box;
         }
 
+        html {
+            width: 100%;
+            scroll-behavior: smooth;
+        }
+
         body {
             margin: 0;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
             background: #fff7fa;
             color: #603d50;
             font-family: Arial, sans-serif;
         }
 
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        /* NAVIGATION */
         .nav {
+            width: 100%;
             background: #fff;
             padding: 18px 5%;
             display: flex;
@@ -27,6 +52,11 @@
             flex-wrap: wrap;
             gap: 15px;
             border-bottom: 1px solid #f3dce7;
+            box-shadow: 0 3px 12px rgba(150, 75, 110, 0.04);
+        }
+
+        .brand {
+            min-width: 0;
         }
 
         .brand strong {
@@ -40,21 +70,27 @@
             display: block;
             color: #987e8d;
             font-size: 11px;
+            line-height: 1.5;
             margin-top: 5px;
         }
 
         .navlinks {
             display: flex;
             flex-wrap: wrap;
+            align-items: center;
             gap: 7px;
         }
 
         .navlinks a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             text-decoration: none;
             color: #745669;
             font-size: 13px;
             padding: 10px 12px;
             border-radius: 9px;
+            transition: background 0.2s, color 0.2s;
         }
 
         .navlinks a:hover,
@@ -63,7 +99,9 @@
             color: #b63d76;
         }
 
+        /* MAIN CONTAINER */
         .container {
+            width: 100%;
             max-width: 1400px;
             margin: 32px auto;
             padding: 0 24px 40px;
@@ -83,15 +121,21 @@
             color: #83184f;
             font-family: Georgia, serif;
             font-size: 36px;
+            line-height: 1.2;
+            overflow-wrap: anywhere;
         }
 
         .subtitle {
             color: #90778a;
             margin: 0;
             font-size: 14px;
+            line-height: 1.6;
         }
 
+        /* SECTIONS */
         .section {
+            width: 100%;
+            min-width: 0;
             background: #fff;
             border: 1px solid #f4dce7;
             border-radius: 16px;
@@ -109,20 +153,30 @@
             margin-bottom: 20px;
         }
 
+        .section-heading > div {
+            min-width: 0;
+        }
+
         .section-heading h2 {
             color: #8c2058;
             font-size: 22px;
+            line-height: 1.3;
             margin: 0 0 6px;
         }
 
         .section-heading p {
             color: #9c8493;
             font-size: 13px;
+            line-height: 1.5;
             margin: 0;
         }
 
+        /* BUTTONS */
         .btn {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
             border: none;
             background: #ce4d83;
             color: white;
@@ -132,23 +186,29 @@
             font-weight: bold;
             text-decoration: none;
             cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
         }
 
         .btn:hover {
             background: #b83b70;
+            transform: translateY(-1px);
         }
 
+        /* SERVICES GRID */
         .service-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
+            align-items: stretch;
             gap: 14px;
+            width: 100%;
         }
 
         .service-card {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 14px;
             min-width: 0;
+            height: 100%;
             padding: 14px;
             border: 1px solid #f4d9e5;
             border-radius: 13px;
@@ -165,7 +225,7 @@
         .service-image {
             width: 90px;
             height: 95px;
-            flex-shrink: 0;
+            flex: 0 0 90px;
             object-fit: cover;
             border-radius: 10px;
             background: #fbe5ee;
@@ -174,6 +234,7 @@
         .service-info {
             min-width: 0;
             flex: 1;
+            overflow-wrap: anywhere;
         }
 
         .service-info h3,
@@ -181,23 +242,30 @@
             margin: 0 0 7px;
             color: #71344f;
             font-size: 15px;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
         }
 
         .description {
             color: #927b8a;
             font-size: 12px;
-            line-height: 1.5;
+            line-height: 1.6;
             margin: 0 0 13px;
+            overflow-wrap: anywhere;
         }
 
         .price {
             color: #ce3f77;
             font-size: 17px;
             font-weight: bold;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
         }
 
         .card-actions {
             display: flex;
+            flex-wrap: wrap;
+            align-items: center;
             gap: 7px;
             margin-top: 12px;
         }
@@ -206,24 +274,38 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            flex: 0 0 32px;
             width: 32px;
             height: 32px;
             border-radius: 50%;
             border: 0;
             background: #fbe0eb;
             color: #b53d76;
-            font-size: 13px;
+            font-size: 15px;
             text-decoration: none;
             cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
         }
 
+        .action-btn:hover {
+            background: #f4c5d9;
+            transform: scale(1.05);
+        }
+
+        /* PROMOS GRID */
         .promo-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
+            align-items: stretch;
             gap: 14px;
+            width: 100%;
         }
 
         .promo-card {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            height: 100%;
             overflow: hidden;
             border: 1px solid #f4d9e5;
             border-radius: 13px;
@@ -234,13 +316,16 @@
 
         .promo-image-wrap {
             position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 9px;
+            background: #fbe5ee;
         }
 
         .promo-image {
             width: 100%;
-            height: 130px;
+            height: 150px;
             object-fit: cover;
-            display: block;
             border-radius: 9px;
             background: #fbe5ee;
         }
@@ -249,38 +334,60 @@
             position: absolute;
             top: 9px;
             right: 8px;
+            max-width: calc(100% - 16px);
             padding: 6px 9px;
             border-radius: 7px;
             background: #c83f7b;
             color: #fff;
             font-size: 11px;
             font-weight: bold;
+            overflow-wrap: anywhere;
         }
 
         .promo-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 0;
             padding: 13px 4px 5px;
         }
 
         .promo-info .price {
-            margin: 12px 0;
+            margin: 12px 0 0;
         }
 
         .promo-details {
             color: #927b8a;
             font-size: 12px;
-            line-height: 1.5;
+            line-height: 1.6;
+            margin: 0;
+            overflow-wrap: anywhere;
         }
 
+        .promo-info .card-actions {
+            margin-top: auto;
+            padding-top: 12px;
+        }
+
+        /* EMPTY STATE */
         .empty-state {
             grid-column: 1 / -1;
+            width: 100%;
             color: #9b8291;
             text-align: center;
+            line-height: 1.6;
             padding: 25px;
             border: 1px dashed #edcddd;
             border-radius: 12px;
+            background: #fffafd;
         }
 
-        @media (max-width: 1000px) {
+        /* TABLETS AND SMALL LAPTOPS */
+        @media (max-width: 1100px) {
+            .nav {
+                padding: 16px 3%;
+            }
+
             .service-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
@@ -288,30 +395,220 @@
             .promo-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
+
+            .container {
+                padding-right: 20px;
+                padding-left: 20px;
+            }
         }
 
+        /* MOBILE */
         @media (max-width: 600px) {
+            html,
+            body {
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            .nav {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 13px;
+                padding: 15px;
+            }
+
+            .brand strong {
+                font-size: 21px;
+            }
+
+            .brand span {
+                font-size: 11px;
+            }
+
+            .navlinks {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                align-items: stretch;
+                gap: 7px;
+                width: 100%;
+            }
+
+            .navlinks a {
+                width: 100%;
+                min-width: 0;
+                text-align: center;
+                padding: 11px 5px;
+                font-size: 12px;
+                overflow-wrap: anywhere;
+            }
+
             .container {
-                padding: 0 13px 25px;
-                margin-top: 24px;
+                width: 100%;
+                max-width: 100%;
+                margin: 22px auto;
+                padding: 0 12px 25px;
+            }
+
+            .page-heading {
+                margin-bottom: 18px;
             }
 
             h1 {
-                font-size: 29px;
+                font-size: 28px;
+            }
+
+            .subtitle {
+                font-size: 13px;
             }
 
             .section {
-                padding: 14px;
+                padding: 13px;
+                margin-bottom: 18px;
+                border-radius: 13px;
+            }
+
+            .section-heading {
+                align-items: flex-start;
+                gap: 12px;
+                margin-bottom: 15px;
+            }
+
+            .section-heading h2 {
+                font-size: 20px;
+            }
+
+            .section-heading p {
+                font-size: 12px;
+            }
+
+            .section-heading .btn {
+                padding: 10px 12px;
+                font-size: 12px;
+                max-width: 100%;
             }
 
             .service-grid,
             .promo-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: minmax(0, 1fr);
+                gap: 12px;
+                width: 100%;
+            }
+
+            .service-card {
+                width: 100%;
+                padding: 11px;
+                gap: 11px;
+                align-items: flex-start;
             }
 
             .service-image {
-                width: 82px;
-                height: 88px;
+                width: 78px;
+                height: 84px;
+                flex: 0 0 78px;
+            }
+
+            .service-info h3,
+            .promo-info h3 {
+                font-size: 14px;
+            }
+
+            .description,
+            .promo-details {
+                font-size: 12px;
+            }
+
+            .price {
+                font-size: 16px;
+            }
+
+            .promo-card {
+                width: 100%;
+                padding: 10px;
+            }
+
+            .promo-image {
+                width: 100%;
+                height: 185px;
+            }
+
+            .promo-info {
+                padding: 12px 3px 4px;
+            }
+
+            .card-actions {
+                gap: 9px;
+            }
+
+            .action-btn {
+                width: 36px;
+                height: 36px;
+                flex-basis: 36px;
+            }
+
+            .empty-state {
+                padding: 20px 12px;
+            }
+        }
+
+        /* VERY SMALL PHONES */
+        @media (max-width: 360px) {
+            .nav {
+                padding: 12px;
+            }
+
+            .container {
+                padding-right: 9px;
+                padding-left: 9px;
+            }
+
+            .section {
+                padding: 10px;
+            }
+
+            .navlinks {
+                gap: 5px;
+            }
+
+            .navlinks a {
+                font-size: 11px;
+                padding: 10px 3px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .service-card {
+                gap: 9px;
+                padding: 9px;
+            }
+
+            .service-image {
+                width: 65px;
+                height: 72px;
+                flex-basis: 65px;
+            }
+
+            .promo-image {
+                height: 155px;
+            }
+
+            .section-heading .btn {
+                padding: 9px;
+                font-size: 11px;
+            }
+        }
+
+        /* REDUCED MOTION ACCESSIBILITY */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
             }
         }
     </style>
@@ -346,10 +643,11 @@
         </div>
     </div>
 
+    <!-- SERVICES -->
     <section class="section">
         <div class="section-heading">
             <div>
-                <h2> Services</h2>
+                <h2>✂ Services</h2>
                 <p>Our beauty services for your best self.</p>
             </div>
 
@@ -374,13 +672,15 @@
                     class="service-image"
                     src="{{ url_for('static', filename='images/' + image_map.get(s.name, 'banner.jpg')) }}"
                     alt="{{ s.name }}"
+                    loading="lazy"
                 >
 
                 <div class="service-info">
                     <h3>{{ s.name }}</h3>
                     <p class="description">{{ s.description }}</p>
+
                     <div class="price">
-                        â‚±{{ "{:,.2f}".format(s.price|float) }}
+                        ₱{{ "{:,.2f}".format(s.price|float) }}
                     </div>
 
                     <div class="card-actions">
@@ -388,13 +688,14 @@
                                 aria-label="Edit service"
                                 title="Edit service"
                                 onclick="alert('Edit Service will be connected to Flask next.')">
-                            âœŽ
+                            ✎
                         </button>
+
                         <button class="action-btn" type="button"
                                 aria-label="Delete service"
                                 title="Delete service"
                                 onclick="alert('Delete Service will be connected to Flask next.')">
-                            â™²
+                            ♲
                         </button>
                     </div>
                 </div>
@@ -407,10 +708,11 @@
         </div>
     </section>
 
+    <!-- PROMOS -->
     <section class="section">
         <div class="section-heading">
             <div>
-                <h2>ðŸ· Promos</h2>
+                <h2>🏷 Promos</h2>
                 <p>Special deals for a more beautiful you.</p>
             </div>
 
@@ -434,30 +736,33 @@
                         class="promo-image"
                         src="{{ url_for('static', filename='images/' + promo_map.get(p[0], 'banner.jpg')) }}"
                         alt="{{ p[0] }} Promo"
+                        loading="lazy"
                     >
+
                     <span class="promo-label">SPECIAL OFFER</span>
                 </div>
 
                 <div class="promo-info">
                     <h3>{{ p[0] }}</h3>
                     <p class="promo-details">{{ p[2] }}</p>
-                
-<div class="price">
-    {{ p[1] if p[1] is string else "â‚±{:,.2f}".format(p[1]|float) }}
-</div>
+
+                    <div class="price">
+                        {{ p[1] if p[1] is string else "₱{:,.2f}".format(p[1]|float) }}
+                    </div>
 
                     <div class="card-actions">
                         <button class="action-btn" type="button"
                                 aria-label="Edit promo"
                                 title="Edit promo"
                                 onclick="alert('Edit Promo will be connected to Flask next.')">
-                            âœŽ
+                            ✎
                         </button>
+
                         <button class="action-btn" type="button"
                                 aria-label="Delete promo"
                                 title="Delete promo"
                                 onclick="alert('Delete Promo will be connected to Flask next.')">
-                            â™²
+                            ♲
                         </button>
                     </div>
                 </div>
