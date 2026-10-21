@@ -455,7 +455,11 @@ table tr:hover td {
             <div>
                 <h1 class="page-title">Dashboard</h1>
                 <p class="page-subtitle">
+<<<<<<< HEAD
                     Welcome To My Glam Salon.
+=======
+                    Welcome back! Here's what's happening at your salon.
+>>>>>>> origin/main
                 </p>
             </div>
 
@@ -522,17 +526,29 @@ table tr:hover td {
             <div class="service-grid">
                 {% for s in services %}
                     {% set image_map = {
+<<<<<<< HEAD
                         'Hair Cut': 'Haircut.jpg',
                         'Hair Color': 'haircolor.jpg',
                         'Rebond': 'RebondHair.jpg',
                         'Manicure': 'Manicure.jpg',
                         'Spa': 'Spa.jpg'
+=======
+                        'Hair Cut': 'Haircut.png',
+                        'Hair Color': 'haircolor.png',
+                        'Rebond': 'RebondHair.png',
+                        'Manicure': 'Manicure.png',
+                        'Spa': 'Spa.png'
+>>>>>>> origin/main
                     } %}
 
                     <article class="service">
                         <img
                             class="service-image"
+<<<<<<< HEAD
                             src="{{ url_for('static', filename='images/' + image_map.get(s.name, 'salon_banner.jpg')) }}"
+=======
+                            src="{{ url_for('static', filename='images/' + image_map.get(s.name, 'salon_banner.svg')) }}"
+>>>>>>> origin/main
                             alt="{{ s.name }}"
                         >
                         <h3>{{ s.name }}</h3>
@@ -560,13 +576,21 @@ table tr:hover td {
                     {% set promo_map = {
                         'Rebond': 'rebond promo.jpg',
                         'Manicure': 'manicurepromo.jpg',
+<<<<<<< HEAD
                         'Spa': 'Spa Special Promo.jpg'
+=======
+                        'Spa': 'Spa Special Promo.png'
+>>>>>>> origin/main
                     } %}
 
                     <article class="promo">
                         <img
                             class="promo-image"
+<<<<<<< HEAD
                             src="{{ url_for('static', filename='images/' + promo_map.get(p[0], 'salon_banner.jpg')) }}"
+=======
+                            src="{{ url_for('static', filename='images/' + promo_map.get(p[0], 'salon_banner.svg')) }}"
+>>>>>>> origin/main
                             alt="{{ p[0] }} Promo"
                         >
                         <h3>{{ p[0] }}</h3>

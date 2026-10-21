@@ -152,6 +152,7 @@ select:focus {
         scroll-behavior: auto !important;
     }
 }
+<<<<<<< HEAD
 
 /* ===== Glam Salon Animations ===== */
 
@@ -271,3 +272,5 @@ textarea:focus {
         transition-duration: 0.01ms !important;
     }
 }
+=======
+>>>>>>> origin/main
