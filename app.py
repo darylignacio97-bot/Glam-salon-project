@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3, json
+from functools import wraps
+from flask import session, redirect, url_for, flash
 from pathlib import Path
 from functools import wraps
 from datetime import date, datetime
@@ -46,12 +48,12 @@ def get_db():
     db.row_factory = sqlite3.Row
     return db
 
-def init_db():
-    db = get_db()
-    db.executescript
+
     
+
 def init_db():
     db = get_db()
+
     db.executescript("""
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -89,28 +91,67 @@ def init_db():
     );
     """)
 
-    for row in SERVICES:
-        db.execute("INSERT OR IGNORE INTO services(name,price,description) VALUES(?,?,?)", row)
-    if db.execute("SELECT COUNT(*) FROM staff").fetchone()[0] == 0:
-        db.executemany("INSERT INTO staff(name,position,contact) VALUES(?,?,?)", STAFF)
+    # Add user_email if using an older database
+    columns = [
+        row[1]
+        for row in db.execute(
+            "PRAGMA table_info(appointments)"
+        ).fetchall()
+    ]
 
-    # Preserve existing appointments.json when it exists.
-    if db.execute("SELECT COUNT(*) FROM appointments").fetchone()[0] == 0 and OLD_JSON.exists():
+    if "user_email" not in columns:
+        db.execute(
+            "ALTER TABLE appointments ADD COLUMN user_email TEXT"
+        )
+
+    # Add default services
+    for row in SERVICES:
+        db.execute(
+            "INSERT OR IGNORE INTO services(name, price, description) VALUES(?,?,?)",
+            row
+        )
+
+    # Add staff only if the table is empty
+    if db.execute("SELECT COUNT(*) FROM staff").fetchone()[0] == 0:
+        db.executemany(
+            "INSERT INTO staff(name, position, contact) VALUES(?,?,?)",
+            STAFF
+        )
+
+    # Preserve existing appointments.json
+    if (
+        db.execute("SELECT COUNT(*) FROM appointments").fetchone()[0] == 0
+        and OLD_JSON.exists()
+    ):
         try:
-            data = json.loads(OLD_JSON.read_text(encoding="utf-8"))
+            data = json.loads(
+                OLD_JSON.read_text(encoding="utf-8")
+            )
             prices = {x[0]: x[1] for x in SERVICES}
+
             for x in data if isinstance(data, list) else []:
                 if isinstance(x, dict):
                     service = x.get("service", "Hair Cut")
-                    db.execute("""INSERT INTO appointments
-                    (customer,contact,date,time,service,staff,price,status)
-                    VALUES(?,?,?,?,?,?,?,?)""", (
-                        x.get("customer",""), x.get("contact",""), x.get("date",""),
-                        x.get("time",""), service, x.get("staff", STAFF[0][0]),
-                        float(x.get("price", prices.get(service,0)) or 0),
-                        x.get("status","Booked")))
-        except Exception:
-            pass
+
+                    db.execute("""
+                    INSERT INTO appointments
+                    (customer, contact, date, time, service, staff, price, status, user_email)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (
+                     customer,
+                     contact,
+                     date,
+                     time,
+                     service,
+                     staff,
+                     price,
+                     status,
+                      session.get("user_email") if session.get("role") == "user" else None
+                     ))
+
+        except Exception as e:
+            print("Appointments JSON import skipped:", e)
+
     db.commit()
     db.close()
 
@@ -121,7 +162,19 @@ def login_required(fn):
             return redirect(url_for("login"))
         return fn(*args, **kwargs)
     return wrapper
+def admin_required(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        if not session.get("logged_in"):
+            return redirect(url_for("login"))
 
+        if session.get("role") != "admin":
+            flash("Admin access only.", "error")
+            return redirect(url_for("dashboard"))
+
+        return fn(*args, **kwargs)
+
+    return wrapper
 
 @app.route("/", methods=["GET", "POST"])
 def login():
@@ -132,14 +185,19 @@ def login():
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
 
-        # Existing admin account
+        # ADMIN LOGIN
         if email == ADMIN_EMAIL and password == ADMIN_PASSWORD:
+            session.clear()
             session["logged_in"] = True
-            session["user_name"] = "Administrator"
+            session["role"] = "admin"
+            session["user_name"] = "Admin"
+            session["user_email"] = email
+
             return redirect(url_for("dashboard"))
 
-        # Registered user account
+        # REGISTERED USER LOGIN
         db = get_db()
+
         try:
             user = db.execute(
                 "SELECT * FROM users WHERE email = ?",
@@ -148,15 +206,20 @@ def login():
         finally:
             db.close()
 
-        if user and check_password_hash(user["password_hash"], password):
+        if user and check_password_hash(
+            user["password_hash"], password
+        ):
+            session.clear()
             session["logged_in"] = True
+            session["role"] = "user"
             session["user_name"] = user["name"]
+            session["user_email"] = user["email"]
+
             return redirect(url_for("dashboard"))
 
         flash("Incorrect email or password.", "error")
 
     return render_template("login.html")
-
 
 @app.get("/logout")
 def logout():
@@ -167,16 +230,58 @@ def logout():
 @login_required
 def dashboard():
     db = get_db()
-    counts = {
-        "appointments": db.execute("SELECT COUNT(*) FROM appointments").fetchone()[0],
-        "staff": db.execute("SELECT COUNT(*) FROM staff").fetchone()[0],
-        "services": db.execute("SELECT COUNT(*) FROM services").fetchone()[0],
-    }
-    recent = db.execute("SELECT * FROM appointments ORDER BY id DESC LIMIT 5").fetchall()
-    services = db.execute("SELECT * FROM services ORDER BY id").fetchall()
-    db.close()
-    return render_template("dashboard.html", counts=counts, recent=recent, services=services, promos=PROMOS)
 
+    try:
+        services = db.execute(
+            "SELECT * FROM services ORDER BY id"
+        ).fetchall()
+
+        # USER DASHBOARD
+        if session.get("role") == "user":
+            appointments = db.execute(
+                """
+                SELECT * FROM appointments
+                WHERE user_email = ?
+                ORDER BY id DESC
+                LIMIT 10
+                """,
+                (session.get("user_email"),)
+            ).fetchall()
+
+            return render_template(
+                "user_dashboard.html",
+                services=services,
+                appointments=appointments,
+                promos=PROMOS
+            )
+
+        # ADMIN DASHBOARD
+        counts = {
+            "appointments": db.execute(
+                "SELECT COUNT(*) FROM appointments"
+            ).fetchone()[0],
+            "staff": db.execute(
+                "SELECT COUNT(*) FROM staff"
+            ).fetchone()[0],
+            "services": db.execute(
+                "SELECT COUNT(*) FROM services"
+            ).fetchone()[0]
+        }
+
+        recent = db.execute(
+            "SELECT * FROM appointments ORDER BY id DESC LIMIT 5"
+        ).fetchall()
+
+        return render_template(
+            "dashboard.html",
+            counts=counts,
+            recent=recent,
+            services=services,
+            promos=PROMOS
+        )
+
+    finally:
+        db.close()
 
 @app.route("/appointments", methods=["GET", "POST"])
 @login_required
@@ -191,6 +296,10 @@ def appointments():
             time_value = request.form.get("time", "").strip()
             service_name = request.form.get("service", "").strip()
             staff_name = request.form.get("staff", "").strip()
+
+            # Para sa User, gamitin ang pangalan mula sa account
+            if session.get("role") == "user":
+                customer = session.get("user_name", "")
 
             if not all([
                 customer, date_value, time_value,
@@ -221,13 +330,18 @@ def appointments():
                     ).fetchone()
 
                     if not service or not staff_member:
-                        flash("Please select a valid service and staff member.", "error")
+                        flash(
+                            "Please select a valid service and staff member.",
+                            "error"
+                        )
                     else:
                         conflict = db.execute("""
                             SELECT id FROM appointments
                             WHERE date = ? AND time = ? AND staff = ?
                             AND status NOT IN ('Cancelled', 'Completed')
-                        """, (date_value, time_value, staff_name)).fetchone()
+                        """, (
+                            date_value, time_value, staff_name
+                        )).fetchone()
 
                         if conflict:
                             flash(
@@ -237,27 +351,56 @@ def appointments():
                         else:
                             db.execute("""
                                 INSERT INTO appointments
-                                (customer, contact, date, time,
-                                 service, staff, price, status)
-                                VALUES (?, ?, ?, ?, ?, ?, ?, 'Booked')
+                                (
+                                    customer, contact, date, time,
+                                    service, staff, price, status,
+                                    user_email
+                                )
+                                VALUES (?, ?, ?, ?, ?, ?, ?, 'Booked', ?)
                             """, (
-                                customer, contact, date_value, time_value,
-                                service["name"], staff_member["name"],
-                                service["price"]
+                                customer,
+                                contact,
+                                date_value,
+                                time_value,
+                                service["name"],
+                                staff_member["name"],
+                                service["price"],
+                                (
+                                    session.get("user_email")
+                                    if session.get("role") == "user"
+                                    else None
+                                )
                             ))
+
                             db.commit()
-                            flash("Appointment saved successfully.", "success")
+                            flash(
+                                "Appointment saved successfully.",
+                                "success"
+                            )
                             return redirect(url_for("appointments"))
 
         services = db.execute(
             "SELECT * FROM services ORDER BY id"
         ).fetchall()
+
         staff = db.execute(
             "SELECT * FROM staff ORDER BY id"
         ).fetchall()
-        rows = db.execute(
-            "SELECT * FROM appointments ORDER BY id DESC"
-        ).fetchall()
+
+        # Admin sees all appointments; User sees only their own
+        if session.get("role") == "admin":
+            rows = db.execute(
+                "SELECT * FROM appointments ORDER BY id DESC"
+            ).fetchall()
+        else:
+            rows = db.execute(
+                """
+                SELECT * FROM appointments
+                WHERE user_email = ?
+                ORDER BY id DESC
+                """,
+                (session.get("user_email"),)
+            ).fetchall()
 
         return render_template(
             "appointments.html",
@@ -265,16 +408,22 @@ def appointments():
             services=services,
             staff=staff
         )
+
     finally:
         db.close()
-
-
 @app.get("/staff")
 @login_required
+@admin_required
 def staff_page():
-    db=get_db(); rows=db.execute("SELECT * FROM staff ORDER BY id").fetchall(); db.close()
-    return render_template("staff.html", staff=rows)
+    db = get_db()
+    try:
+        rows = db.execute(
+            "SELECT * FROM staff ORDER BY id"
+        ).fetchall()
 
+        return render_template("staff.html", staff=rows)
+    finally:
+        db.close()
 @app.get("/services")
 @login_required
 def services_page():
@@ -283,10 +432,20 @@ def services_page():
 
 @app.get("/history")
 @login_required
+@admin_required
 def history():
-    db=get_db(); rows=db.execute("SELECT * FROM appointments ORDER BY id DESC").fetchall(); db.close()
-    return render_template("history.html", appointments=rows)
+    db = get_db()
+    try:
+        rows = db.execute(
+            "SELECT * FROM appointments ORDER BY id DESC"
+        ).fetchall()
 
+        return render_template(
+            "history.html",
+            appointments=rows
+        )
+    finally:
+        db.close()
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():

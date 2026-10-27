@@ -1,0 +1,427 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GLAM SALON | User Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        * { box-sizing: border-box; }
+
+        :root {
+            --pink: #c34d78;
+            --pink-dark: #963956;
+            --pink-light: #fff0f5;
+            --text: #402d36;
+            --muted: #806d76;
+            --white: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fff9fb;
+            color: var(--text);
+        }
+
+        header {
+            background: white;
+            padding: 17px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 12px #54203610;
+        }
+
+        .brand {
+            color: var(--pink-dark);
+            font-family: Georgia, serif;
+            font-size: 25px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .brand small {
+            display: block;
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            letter-spacing: 3px;
+            margin-top: 4px;
+            color: var(--muted);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #65404f;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        nav a:hover { color: var(--pink); }
+
+        main {
+            width: 92%;
+            max-width: 1250px;
+            margin: 28px auto;
+        }
+
+        .welcome {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            min-height: 240px;
+            padding: 28px;
+            border-radius: 18px;
+            overflow: hidden;
+            margin-bottom: 32px;
+            background: linear-gradient(110deg, #f8dce5, #fff0f4);
+            box-shadow: 0 5px 18px #5420360c;
+        }
+
+        .welcome-photo {
+            width: 175px;
+            height: 175px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 5px 18px #54203620;
+        }
+
+        .welcome-content { position: relative; z-index: 1; }
+
+        .welcome h1 {
+            font-family: Georgia, serif;
+            font-size: clamp(25px, 3vw, 36px);
+            color: var(--pink-dark);
+            margin: 0 0 12px;
+        }
+
+        .welcome p {
+            color: #674956;
+            line-height: 1.7;
+            margin: 0 0 14px;
+        }
+
+        .button {
+            display: inline-block;
+            background: var(--pink);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 9px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            transition: background .2s, transform .2s;
+        }
+
+        .button:hover {
+            background: var(--pink-dark);
+            transform: translateY(-2px);
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 30px 0 17px;
+        }
+
+        h2 {
+            font-family: Georgia, serif;
+            color: var(--pink-dark);
+            font-size: 25px;
+            margin: 0;
+        }
+
+        .section-link {
+            color: var(--pink-dark);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            min-width: 0;
+            background: white;
+            border: 1px solid #f1e4e9;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px #5420360b;
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 18px #54203615;
+        }
+
+        .service-photo {
+            width: 100%;
+            height: 165px;
+            display: block;
+            object-fit: cover;
+            background: var(--pink-light);
+        }
+
+        .card-content { padding: 17px; }
+
+        .card h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+            overflow-wrap: anywhere;
+        }
+
+        .price {
+            color: var(--pink-dark);
+            font-weight: bold;
+            font-size: 17px;
+            margin: 0 0 13px;
+        }
+
+        .card .button {
+            text-align: center;
+            width: 100%;
+            margin-top: 4px;
+        }
+
+        .appointment-card {
+            padding: 19px;
+        }
+
+        .appointment-card h3 { color: var(--pink-dark); }
+
+        .appointment-card p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .status {
+            display: inline-block;
+            background: #fce6ee;
+            color: #963956;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .empty-card {
+            grid-column: 1 / -1;
+            padding: 24px;
+            text-align: center;
+            background: white;
+            border: 1px dashed #e5b9c9;
+            border-radius: 14px;
+        }
+
+        .promo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin: 30px 0;
+            padding: 25px;
+            border-radius: 16px;
+            background: linear-gradient(110deg, #f4c5d5, #fff0f5);
+        }
+
+        .promo h2 { margin-bottom: 10px; }
+        .promo p { line-height: 1.6; }
+
+        .promo-decoration {
+            font-size: 70px;
+            flex-shrink: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px 15px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        @media (max-width: 900px) {
+            .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .welcome-photo { width: 135px; height: 135px; }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 16px 5%;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .brand { font-size: 22px; }
+
+            nav {
+                width: 100%;
+                gap: 10px 16px;
+            }
+
+            nav a { font-size: 13px; }
+
+            main {
+                width: 92%;
+                margin: 19px auto;
+            }
+
+            .welcome {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+                gap: 16px;
+            }
+
+            .welcome-photo {
+                width: 105px;
+                height: 105px;
+            }
+
+            .welcome h1 { font-size: 25px; }
+
+            .cards { grid-template-columns: minmax(0, 1fr); }
+
+            .service-photo { height: 210px; }
+
+            .section-heading { margin-top: 26px; }
+
+            h2 { font-size: 22px; }
+
+            .promo {
+                padding: 20px;
+                gap: 10px;
+            }
+
+            .promo-decoration { font-size: 38px; }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <div class="brand">
+        GLAM SALON
+        <small>BEAUTY • CARE • YOU</small>
+    </div>
+
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Home</a>
+        <a href="{{ url_for('services_page') }}">Services</a>
+        <a href="{{ url_for('appointments') }}">My Appointments</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+</header>
+
+<main>
+    <section class="welcome">
+        <img
+            class="welcome-photo"
+            src="{{ url_for('static', filename='images/banner.jpg') }}"
+            alt="GLAM SALON beauty"
+            onerror="this.style.display='none'"
+        >
+
+        <div class="welcome-content">
+            <h1>Welcome, {{ session.get('user_name', 'Customer') }}!</h1>
+            <p>Your beauty and self-care journey starts here. Enjoy a little time for yourself. 💗</p>
+            <a class="button" href="{{ url_for('appointments') }}">＋ Book an Appointment</a>
+        </div>
+    </section>
+
+    <div class="section-heading">
+        <h2>Our Salon Services</h2>
+        <a class="section-link" href="{{ url_for('services_page') }}">View All Services →</a>
+    </div>
+
+    <section class="cards">
+        {% for service in services %}
+        <article class="card">
+            {% if service.name == 'Hair Cut' %}
+                <img class="service-photo" src="{{ url_for('static', filename='images/haircut.jpg') }}" alt="Hair Cut" loading="lazy">
+            {% elif service.name == 'Hair Color' %}
+                <img class="service-photo" src="{{ url_for('static', filename='images/haircolor.jpg') }}" alt="Hair Color" loading="lazy">
+            {% elif service.name == 'Rebond' %}
+                <img class="service-photo" src="{{ url_for('static', filename='images/RebondHair.jpg') }}" alt="Hair Rebond" loading="lazy">
+            {% elif service.name == 'Manicure' %}
+                <img class="service-photo" src="{{ url_for('static', filename='images/Manicure.jpg') }}" alt="Manicure" loading="lazy">
+            {% elif service.name == 'Spa' %}
+                <img class="service-photo" src="{{ url_for('static', filename='images/Spa.jpg') }}" alt="Spa" loading="lazy">
+            {% else %}
+                <img class="service-photo" src="{{ url_for('static', filename='images/banner.jpg') }}" alt="Salon service" loading="lazy">
+            {% endif %}
+
+            <div class="card-content">
+                <h3>{{ service.name }}</h3>
+                <p class="price">₱{{ "%.2f"|format(service.price|float) }}</p>
+                <a class="button" href="{{ url_for('appointments') }}">Book Now</a>
+            </div>
+        </article>
+        {% else %}
+        <article class="empty-card">
+            <p>Salon services will be available soon.</p>
+        </article>
+        {% endfor %}
+    </section>
+
+    <section class="promo">
+        <div>
+            <h2>A Little Self-Care Goes a Long Way 💗</h2>
+            <p>Ready for your next beauty treatment? Book your appointment with GLAM SALON.</p>
+            <a class="button" href="{{ url_for('appointments') }}">Book Your Visit</a>
+        </div>
+        <div class="promo-decoration" aria-hidden="true">🌸</div>
+    </section>
+
+    <div class="section-heading">
+        <h2>My Recent Appointments</h2>
+        <a class="section-link" href="{{ url_for('appointments') }}">View Appointments →</a>
+    </div>
+
+    <section class="cards">
+        {% for appointment in appointments %}
+        <article class="card appointment-card">
+            <h3>{{ appointment.service }}</h3>
+            <p><strong>Date:</strong> {{ appointment.date }}</p>
+            <p><strong>Time:</strong> {{ appointment.time }}</p>
+            <p><strong>Staff:</strong> {{ appointment.staff }}</p>
+            <span class="status">{{ appointment.status }}</span>
+        </article>
+        {% else %}
+        <article class="empty-card">
+            <h3>No appointments yet</h3>
+            <p>Your bookings will appear here after you make an appointment.</p>
+            <a class="button" href="{{ url_for('appointments') }}">Book Your First Appointment</a>
+        </article>
+        {% endfor %}
+    </section>
+</main>
+
+<footer>
+    © GLAM SALON · Beauty • Care • You
+</footer>
+</body>
+</html>
